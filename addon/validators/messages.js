@@ -17,6 +17,17 @@ export default Ember.Object.extend({
   _regex: /\{(\w+)\}/g,
 
   /**
+   * Get the attribute description to prepend to a message. This is here
+   * mostly as a hook for the i18n solutions.
+   * @param  {String} attribute
+   * @param  {Object} options
+   * @return {String}
+   */
+  getAttributeDescriptionFor(attribute, options = {}) {
+    return options.attributeDescription || 'This field';
+  },
+
+  /**
    * Get a message with a given type
    * @param  {String} type
    * @param  {Object} context

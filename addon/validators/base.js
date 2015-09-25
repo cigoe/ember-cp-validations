@@ -50,7 +50,7 @@ export default Ember.Object.extend({
     var options = get(this, 'options');
     var errorMessages = Messages;
 
-    if(container) {
+    if (container) {
       // Since default error messages are stored in app/validators/messages, we have to look it up via the container
       errorMessages = container.lookupFactory('validator:messages');
     }
@@ -87,23 +87,21 @@ export default Ember.Object.extend({
    */
   createErrorMessage(type, options, value, context) {
     options = options || {};
-    var attribute = options.attributeDescription || 'This field';
     var messages = this.get('errorMessages');
+    var attributeDescription = messages.getAttributeDescriptionFor(get(this, 'attribute'), options);
     var message;
-
-    attribute = `${attribute.trim()} `;
 
     if (options.message) {
       if (typeof options.message === 'string') {
         message = messages.formatMessage(options.message, context);
       } else if (typeof options.message === 'function') {
-        message = options.message.call(this, ...arguments);
+        message = options.message.apply(this, arguments);
         message = isNone(message) ? messages.getMessageFor(type, context) : messages.formatMessage(message, context); // fail-safe to default message of type
       }
     } else {
       message = messages.getMessageFor(type, context);
     }
 
-    return (attribute + message).trim();
+    return `${attributeDescription} ${message}`.trim();
   }
 });
